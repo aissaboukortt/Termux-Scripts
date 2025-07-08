@@ -155,3 +155,6 @@ Device info is saved to metadata/ as .json files
 This tool is for educational, testing, and internal network use only.
 
 For live public use, please ensure user consent and legal compliance.
+## 📝 License
+
+This project is licensed under the [Apache License 2.0](LICENSE) © 2025 Aïssa Boukortt.
