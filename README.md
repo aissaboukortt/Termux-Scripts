@@ -1,4 +1,4 @@
-# 📸 Cam Capture - Webcam Snapshot Logger
+# MetaCam : Remotely access camera snapshots and device metadata from any connected device through a secure host link.
 
 This project launches a simple web interface that:
 - Captures webcam images every 3 seconds.
