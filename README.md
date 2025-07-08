@@ -98,30 +98,30 @@ cloudflared tunnel --url http://localhost:5000
 
 Step-by-step:
 
-# Install git and python if not installed
+### Install git and python if not installed
 ```
 sudo apt install git python3-pip -y
 ```
-  # (for Debian/Ubuntu)
-# Or: brew install git python3       # (for macOS with Homebrew)
+  ### (for Debian/Ubuntu)
+### Or: brew install git python3       ### (for macOS with Homebrew)
 
-# Clone the project
+### Clone the project
 ```
 git clone
 https://github.com/aissaboukortt/Termux-Scripts.git ~/cam-capture
 ```
 
-# Go to the project folder
+### Go to the project folder
 ```
 cd ~/cam-capture
 ```
 
-# Install dependencies
+### Install dependencies
 ```
 pip3 install flask
 ```
 
-# Install cloudflared (optional)
+### Install cloudflared (optional)
 ```
 sudo curl -s https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared
 ```
@@ -129,12 +129,12 @@ sudo curl -s https://github.com/cloudflare/cloudflared/releases/latest/download/
 sudo chmod +x /usr/local/bin/cloudflared
 ```
 
-# Start the server
+### Start the server
 ```
 python3 app.py
 ```
 
-# In another terminal
+### In another terminal
 ```
 cloudflared tunnel --url http://localhost:5000
 ```
