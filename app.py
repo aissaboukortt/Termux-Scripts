@@ -36,6 +36,7 @@ def upload():
             json.dump(data, f, indent=2)
 
         return 'Uploaded', 200
+
     return 'No image', 400
 
 if __name__ == '__main__':
