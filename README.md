@@ -142,10 +142,45 @@ cloudflared tunnel --url http://localhost:5000
 
 ---
 
-📂 Output
+## 📂 Output
 
-Captured images are saved to the images/ folder
-Device info is saved to metadata/ as .json files
+Captured images and device metadata are saved to the cam-capture folder on termux
+to copy then into internal storage use 
+### First: allow termux to access storage using:
+```
+termux-setup-storage
+```
+### Second: Create the cam-capture folder using 
+```
+mkdir -p /sdcard/cam-capture/images
+mkdir -p /sdcard/cam-capture/metadata
+```
+## Copying to internal storage:
+### For images:
+```
+cp ~/cam-capture/images/*.png /sdcard/cam-capture/images/
+```
+### For metadata:
+```
+cp ~/cam-capture/metadata/*.json /sdcard/cam-capture/metadata/
+```
+## Moving to internal storage:
+### For images:
+```
+mv ~/cam-capture/images/*.png /sdcard/cam-capture/images/
+```
+### For metadata:
+```
+mv ~/cam-capture/metadata/*.json /sdcard/cam-capture/metadata/
+```
+# Launch script:
+```
+python app.py
+```
+# Stop script:
+```
+CTRL+C
+```
 
 
 ---
